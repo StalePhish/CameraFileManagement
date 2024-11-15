@@ -1,0 +1,214 @@
+﻿<UserControl x:Class="CAndrews.CameraFileManagement.Application.View.CameraControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CAndrews.CameraFileManagement.Application.View"
+             xmlns:converters="clr-namespace:CAndrews.CameraFileManagement.Application.Converters"
+             xmlns:viewmodel="clr-namespace:CAndrews.CameraFileManagement.Application.ViewModel"
+             d:DataContext="{d:DesignInstance Type=viewmodel:CameraViewModel}"
+             DataContext="{StaticResource CameraViewModel}"
+             d:DesignHeight="360" d:DesignWidth="815"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="DataGridTextColumnValidityStyle" TargetType="{x:Type TextBlock}">
+            <Style.Triggers>
+                <Trigger Property="Text" Value="">
+                    <Setter Property="Background" Value="Red"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="DataGridTextColumnStatusStyle" TargetType="{x:Type TextBlock}">
+            <Style.Triggers>
+                <Trigger Property="Text" Value="Failed">
+                    <Setter Property="Background" Value="Red"/>
+                </Trigger>
+                <Trigger Property="Text" Value="Success">
+                    <Setter Property="Background" Value="Green"/>
+                </Trigger>
+                <Trigger Property="Text" Value="Processing">
+                    <Setter Property="Background" Value="Blue"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:EmptyStringToBoolConverter x:Key="EmptyStringToBoolConverter" />
+        <converters:StatusTypeToColorConverter x:Key="StatusTypeToColorConverter" />
+    </UserControl.Resources>
+    
+    <Grid AllowDrop="True" Drop="DropFiles">
+        <Grid.Resources>
+            <Style TargetType="{x:Type Button}">
+                <Setter Property="Margin" Value="2" />
+            </Style>
+            <Style TargetType="{x:Type CheckBox}">
+                <Setter Property="Margin" Value="2" />
+            </Style>
+            <Style TargetType="{x:Type ComboBox}">
+                <Setter Property="Margin" Value="2" />
+            </Style>
+            <Style TargetType="{x:Type DataGrid}">
+                <Setter Property="Margin" Value="2" />
+            </Style>
+            <Style TargetType="{x:Type ProgressBar}">
+                <Setter Property="Margin" Value="2" />
+            </Style>
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="Margin" Value="2" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+            </Style>
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Source Directory -->
+        <Grid Grid.Row="0" IsEnabled="{Binding IsNotBusy}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Content="Load Removable Drive" Command="{Binding LoadRemovableCommand}" />
+            <Label Grid.Column="1" Content="Source Directory:" />
+            <TextBox Grid.Column="2" Text="{Binding SourceDirectory}" AllowDrop="True" Drop="DropFiles" />
+            <Button Grid.Column="2" Content="↺" Command="{Binding ReloadSourceCommand}" 
+                    HorizontalAlignment="Right" Width="18" Height="18" Margin="5" />            
+            <Button Grid.Column="3" Content="..." Command="{Binding BrowseSourceCommand}" Width="50" />
+        </Grid>
+
+        <!-- Options -->
+        <Grid Grid.Row="1" IsEnabled="{Binding IsNotBusy}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" Content="Camera:" />
+            <ComboBox Grid.Column="1" ItemsSource="{Binding AvailableCameraAliases}" SelectedItem="{Binding CameraAlias}" 
+                      DropDownClosed="Camera_DropDownClosed" />
+            <Expander Grid.Column="2" ExpandDirection="Right" Name="_cameraExpander">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Apply to Unknown" Command="{Binding UpdateUnknownCommand}" />
+                    <Button Content="Apply to All" Command="{Binding UpdateAllCommand}" />
+                    <Button Content="Persist On Card" Command="{Binding PersistCameraCommand}" />
+                </StackPanel>
+            </Expander>
+            <Label Grid.Column="4" Content="Advanced: " />
+            <Expander Grid.Column="5" ExpandDirection="Left" HorizontalContentAlignment="Right">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Content="Append Suffix: " />
+                    <TextBox Grid.Column="1" Text="{Binding Suffix}" d:Text="Suffix" Width="120" />
+                    <Button Grid.Column="1" Content="✎" Command="{Binding AppendSuffixCommand}" 
+                            HorizontalAlignment="Right" Width="18" Height="18" Margin="5" />
+                    <CheckBox Grid.Column="2" Content="Include Subfolders" IsChecked="{Binding Subfolders}" VerticalAlignment="Center" />
+                    <CheckBox Grid.Column="3" Content="Open Folders After" IsChecked="{Binding OpenFoldersAfter}" VerticalAlignment="Center" />
+                </Grid>
+            </Expander>
+            <Button Grid.Column="6" Content="Select All" Command="{Binding SelectAllCommand}" />
+            <Button Grid.Column="7" Content="Deselect Unknown" Command="{Binding DeselectUnknownCommand}" />
+        </Grid>
+
+        <!-- Data Grid -->
+        <DataGrid Grid.Row="2" ItemsSource="{Binding CameraFiles}"
+                  AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" VerticalContentAlignment="Center">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Selected">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding Selected, UpdateSourceTrigger=PropertyChanged}" 
+                                      IsEnabled="{Binding DestinationPath, Converter={StaticResource EmptyStringToBoolConverter}}"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Status" Binding="{Binding Status, UpdateSourceTrigger=PropertyChanged}"
+                                    ElementStyle="{StaticResource DataGridTextColumnStatusStyle}" IsReadOnly="True">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="{Binding Error}" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTemplateColumn Header="Camera">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding AllCameraAliases}" SelectedItem="{Binding Alias, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Source" Binding="{Binding SourceNoRoot, UpdateSourceTrigger=PropertyChanged}" 
+                                    ElementStyle="{StaticResource DataGridTextColumnValidityStyle}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Destination Directory" Binding="{Binding DestinationDirectory, UpdateSourceTrigger=PropertyChanged}" 
+                                    ElementStyle="{StaticResource DataGridTextColumnValidityStyle}" />
+                <DataGridTemplateColumn Header="Browse">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="..." Click="BrowseDestination" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Destination File Name" Binding="{Binding DestinationFileName, UpdateSourceTrigger=PropertyChanged}" 
+                                    ElementStyle="{StaticResource DataGridTextColumnValidityStyle}" />
+                <DataGridTemplateColumn Header="Destination Exists">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding DestinationExists, Mode=OneWay}" IsEnabled="False"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Move (or Copy)">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding Move, UpdateSourceTrigger=PropertyChanged}"
+                                      HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Progress -->
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <local:ProgressControl x:Name="_progressControl" />
+
+            <Button Grid.Column="2" Content="Run 🖱️" Command="{Binding RunCommand}" Width="100" Height="25"
+                    Visibility="{Binding IsNotBusy, Converter={StaticResource BoolToVisibilityConverter}}" >
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Move All" Command="{Binding MoveCommand}" />
+                        <MenuItem Header="Copy All" Command="{Binding CopyCommand}" />
+                        <MenuItem Header="Rename Only" Command="{Binding RenameCommand}" />
+                        <MenuItem Header="Demonstration" Command="{Binding DemoCommand}" />
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
+            <Button Grid.Column="1" Grid.ColumnSpan="2" Content="Cancel" Command="{Binding CancelCommand}" Width="100" Height="25"
+                    Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" d:Visibility="Collapsed" />
+        </Grid>
+    </Grid>
+</UserControl>

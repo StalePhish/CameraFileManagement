@@ -1,0 +1,41 @@
+﻿<Window x:Class="CAndrews.CameraFileManagement.Application.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CAndrews.CameraFileManagement.Application.View"
+        xmlns:viewmodel="clr-namespace:CAndrews.CameraFileManagement.Application.ViewModel"
+        d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
+        DataContext="{StaticResource MainWindowViewModel}"
+        Title="CAndrews Camera File Management"
+        Height="600" Width="1300"
+        d:Height="400" d:Width="700"
+        KeyDown="Window_KeyDown"
+        Icon="..\camera.ico"
+        mc:Ignorable="d" >
+    <Window.InputBindings>
+        <KeyBinding Key="F1" Command="{Binding AboutCommand}"/>
+    </Window.InputBindings>
+    <TabControl x:Name="_tabs" SelectedIndex="{Binding SelectedTab}">
+        <TabItem Header="Camera Copy">
+            <Grid>
+                <local:CameraControl x:Name="_cameraControl" />
+            </Grid>
+        </TabItem>
+        <TabItem Header="File Attributes">
+            <Grid>
+                <local:FileAttributesControl x:Name="_fileAttributesControl" />
+            </Grid>
+        </TabItem>
+        <TabItem Header="Settings">
+            <Grid>
+                <local:SettingsControl x:Name="_settingsControl" />
+            </Grid>
+        </TabItem>
+        <TabItem Header="About">
+            <Grid>
+                <local:AboutControl x:Name="_aboutControl" />
+            </Grid>
+        </TabItem>
+    </TabControl>
+</Window>

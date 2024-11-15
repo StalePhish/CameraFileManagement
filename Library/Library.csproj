@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+        <AssemblyName>$(SolutionName)</AssemblyName>
+        <RootNamespace>$(SolutionName)</RootNamespace>
+		<OutputType>Library</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+        <ProductName>Camera File Management</ProductName>
+        <AssemblyTitle>Camera File Management</AssemblyTitle>
+        <Version>2024.11.15.1245</Version>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="OpenFolderAndSelect.exe" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.WindowsDesktop.App" />
+		<PackageReference Include="MetadataExtractor" Version="2.9.0-rc2" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="taglib-sharp-netstandard2.0" Version="2.1.0" />
+        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+        <PackageReference Include="UsbEject.NetCore" Version="1.0.4" />
+        <PackageReference Include="WindowsAPICodePack" Version="8.0.4" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="OpenFolderAndSelect.exe">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+</Project>

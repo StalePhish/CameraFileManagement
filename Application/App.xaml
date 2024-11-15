@@ -1,0 +1,14 @@
+﻿<Application x:Class="CAndrews.CameraFileManagement.Application.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewmodel="clr-namespace:CAndrews.CameraFileManagement.Application.ViewModel"
+             StartupUri="view\MainWindow.xaml">
+    <Application.Resources>
+        <viewmodel:MainWindowViewModel x:Key="MainWindowViewModel" />
+        <viewmodel:CameraViewModel x:Key="CameraViewModel" />
+        <viewmodel:FileAttributesViewModel x:Key="FileAttributesViewModel" />
+        <viewmodel:SettingsViewModel x:Key="SettingsViewModel" />
+        <viewmodel:AboutViewModel x:Key="AboutViewModel" />
+        <viewmodel:ProgressViewModel x:Key="ProgressViewModel" />
+    </Application.Resources>
+</Application>

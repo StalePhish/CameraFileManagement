@@ -1,0 +1,19 @@
+<Project>
+	<PropertyGroup>
+		<Company>CAndrews</Company>
+		<Authors>Chris Andrews</Authors>
+		<IncrementVersionOnBuild>yyyy.MM.dd.Hmm</IncrementVersionOnBuild>
+
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+
+		<!--<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>-->
+		<!--<RootNamespace>$(SolutionName).$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>-->
+
+        <BaseAppDataPath>$(AppData)\$(Company)\$(SolutionName)</BaseAppDataPath>
+        <BaseOutputPath>$(BaseAppDataPath)\artifacts\bin\</BaseOutputPath>
+		<BaseIntermediateOutputPath>$(BaseAppDataPath)\artifacts\obj\</BaseIntermediateOutputPath>
+        
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	</PropertyGroup>
+</Project>

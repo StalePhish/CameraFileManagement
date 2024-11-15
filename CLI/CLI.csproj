@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+        <AssemblyName>$(SolutionName).CLI</AssemblyName>
+        <RootNamespace>$(SolutionName).CLI</RootNamespace>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+		<Version>2024.11.15.1245</Version>
+
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>CFM</ToolCommandName>
+        <Description>Camera File Management</Description>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Application\Application.csproj" />
+		<ProjectReference Include="..\Library\Library.csproj" />
+	</ItemGroup>
+
+</Project>
