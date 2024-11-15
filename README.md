@@ -55,7 +55,31 @@ The core of configurability for Camera File Management lies in the `Settings` ta
 ![CFM Settings](https://github.com/user-attachments/assets/e21e11e2-9232-4706-88f5-ab5ad3216623)
 
 ## Command Line Interface
-TODO
+Camera File Management provides a CLI (command-line interface) accessed via `CAndrews.CameraFileManagement.CLI.exe` in a command prompt. This provides most of the same functionality as the full application, but its main purpose is to create shortcuts for frequently run commands. For example every day I open a shortcut to automatically run against my Dropbox\Camera Uploads directory to grab photos taken with my phone the day before.
+
+All commands are arguments against `CAndrews.CameraFileManagement.CLI.exe`, for example `CAndrews.CameraFileManagement.CLI.exe about`
+- `camera -?` - Camera copy command
+  - `list <path>` - Display camera files to be copied
+  - `run <path>` - Run file transfer using individual move or copy settings per file
+  - `move <path>` - Run file transfer explicitly moving all files
+  - `copy <path>` - Run file transfer explicitly copying all files
+  - `rename <path>` - Run file transfer explicitly renaming all files in place
+  - `demo <path>` - Run file transfer in demonstration mode that does not copy and files
+- `file <path>` - Displays file attributes
+- `settings -?` - Manages settings
+  - `settings list` - Displays settings
+  - `import <path>` - Import settings from .cfm file
+  - `export <path>` - Export settings to .cfm file
+  - `set-format <value>` - Sets the Date/Time format
+  - `reset-format` - Resets the Date/Time format to factory default
+  - `set-extensions <value>` - Sets the Date/Time format
+  - `reset-extensions` - Resets the supported file extensions to factory default
+  - `set-default-source-directory <value>` - Sets the default source directory
+  - `reset-default-source-directory` - Resets the default source directory to factory default
+  - `add <path>` - Adds a new camera from a sample file
+  - `delete <camera|index>` - Deletes a camera
+  - `set <camera|index> <property> <value>` - Sets a property's value
+- `about` - Displays Help>About information
 
 ## IDE and Plugins
 - [Visual Studio 2022 Community Edition](https://visualstudio.microsoft.com/vs/community/)
