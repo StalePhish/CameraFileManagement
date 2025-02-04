@@ -27,6 +27,8 @@ public class CameraLoad : NotifyPropertyChanged
             _progress.Result = StatusType.Ready;
             _progress.Text = $"Loading {directoryPath}...";
             ProgressUpdate?.Invoke(_progress);
+            double filesLoaded = 0;
+            double filesFailed = 0;
 
             // Get list of all files in the directory, recursively if applicable.
             // Use the space-separated extensions setting as an inclusion filter.
@@ -56,9 +58,18 @@ public class CameraLoad : NotifyPropertyChanged
                     // Check for user cancellation at the beginning of each loop
                     cancel.ThrowIfCancellationRequested();
 
-                    // The heavy lifting occurs inside the CameraFileInfo constructor
-                    cameraFiles.Add(new(sourceFile, directoryPath, camera));
-                    _progress.Text = $"Loaded {_progress.Value++} files from {directoryPath}";
+                    try
+                    {
+                        // The heavy lifting occurs inside the CameraFileInfo constructor
+                        cameraFiles.Add(new(sourceFile, directoryPath, camera));
+                        _progress.Text = $"Loaded {_progress.Value++} files from {directoryPath}";
+                        filesLoaded++;
+                    }
+                    catch (Exception ex)
+                    {
+                        _progress.Text = $"{sourceFile.Name} failed: {ex.Message}";
+                        filesFailed++;
+                    }                    
                     ProgressUpdate?.Invoke(_progress);
                 }
 
@@ -81,7 +92,7 @@ public class CameraLoad : NotifyPropertyChanged
 
             // Reset progress bar when loading has finished
             _progress.Result = StatusType.Success;
-            _progress.Text = $"Loaded {_progress.Value} files from {directoryPath}";
+            _progress.Text = $"Loaded {filesLoaded} files {(filesFailed > 0 ? $"and {filesFailed} files failed" : "")} from {directoryPath}";
             _progress.Value = 0;
             _progress.Maximum = 1;
             ProgressUpdate?.Invoke(_progress);
