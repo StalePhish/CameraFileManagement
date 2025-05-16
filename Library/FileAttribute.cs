@@ -52,8 +52,8 @@ public class FileAttribute(string name, string value, string source)
         }
         catch (Exception ex)
         {
-            // Ignore exceptions from TagLib
-            if (ex.Source != "taglib-sharp")
+            // Ignore exceptions from TagLib or file compression issues
+            if (ex is not TagLib.CorruptFileException && ex is not TagLib.UnsupportedFormatException && ex is not InvalidDataException)
             {
                 throw;
             }

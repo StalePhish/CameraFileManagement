@@ -96,7 +96,7 @@ public static class FileAttributeExtensions
             catch (Exception ex)
             {
                 // Ignore exceptions from TagLib
-                if (ex is not TagLib.CorruptFileException && ex is not TagLib.UnsupportedFormatException)
+                if (ex is not TagLib.CorruptFileException && ex is not TagLib.UnsupportedFormatException && ex is not InvalidDataException)
                 {
                     throw;
                 }
@@ -140,7 +140,7 @@ public static class FileAttributeExtensions
                 DateTime.TryParseExact(dropboxDateMatch.Value, "yyyy-MM-dd HH.mm.ss",
                 CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out dateTime))
             {
-                fileName = Regex.Replace(fileName, dropboxDatePattern, string.Empty);
+                fileName = Regex.Replace(fileName, dropboxDatePattern, string.Empty).Trim();
             }
 
             // Try to get date/time from Ring newer style filenames

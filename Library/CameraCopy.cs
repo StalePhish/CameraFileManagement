@@ -168,7 +168,7 @@ public class CameraCopy : NotifyPropertyChanged
                                 catch (Exception ex)
                                 {
                                     // Ignore exceptions from TagLib
-                                    if (ex is not TagLib.CorruptFileException && ex is not TagLib.UnsupportedFormatException)
+                                    if (ex is not TagLib.CorruptFileException && ex is not TagLib.UnsupportedFormatException && ex is not InvalidDataException)
                                     {
                                         throw;
                                     }

@@ -101,7 +101,7 @@ public class CameraLoad : NotifyPropertyChanged
         catch (Exception ex)
         {
             // Ignore exceptions from TagLib
-            if (ex.Source != "taglib-sharp")
+            if (ex is not TagLib.CorruptFileException && ex is not TagLib.UnsupportedFormatException)
             {
                 _progress.Result = StatusType.Failed;
                 _progress.Text = $"Loading failed: {ex.Message}";
