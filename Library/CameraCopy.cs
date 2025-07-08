@@ -140,7 +140,7 @@ public class CameraCopy : NotifyPropertyChanged
                         if (copyType != CopyType.Demonstration)
                         {
                             // Summarize a list of which cameras need to be ejected
-                            if (file.Camera.Type is CameraType.Camera or CameraType.Drone)
+                            if ((file.Camera.Type is CameraType.Camera or CameraType.Drone) && copyType != CopyType.Rename)
                             {
                                 DriveInfo drive = removableDrives.SingleOrDefault(d => d.Name == Directory.GetDirectoryRoot(file.SourceDirectory));
                                 if (drive is not null)

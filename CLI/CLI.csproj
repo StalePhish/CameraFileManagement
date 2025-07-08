@@ -6,7 +6,7 @@
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net8.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-		<Version>2025.5.16.741</Version>
+		<Version>2025.7.8.1747</Version>
 
         <PackAsTool>true</PackAsTool>
         <ToolCommandName>CFM</ToolCommandName>
