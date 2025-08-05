@@ -115,8 +115,9 @@ public static class FileAttributeExtensions
     {
         var (make, model) = fileAttributes.GetMakeAndModel();
 
-        // TODO improve so entries with Make=value and Model=null won't return two result cameras for a Model that was never filled out
-        return Settings.Instance.CameraSettings.SingleOrDefault(cs => (cs.Make == make || make is null) && cs.Model == model);
+        return Settings.Instance.CameraSettings.SingleOrDefault(cs =>
+            (cs.Make == make && cs.Model == model) ||
+            (make == null && model == null && cs.Make == null && cs.Model == null));
     }
 
     /// <summary>
