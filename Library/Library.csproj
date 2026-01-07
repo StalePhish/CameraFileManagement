@@ -7,7 +7,7 @@
 		<TargetFramework>net8.0-windows</TargetFramework>
         <ProductName>Camera File Management</ProductName>
         <AssemblyTitle>Camera File Management</AssemblyTitle>
-        <Version>2025.8.5.623</Version>
+        <Version>2026.1.7.1818</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

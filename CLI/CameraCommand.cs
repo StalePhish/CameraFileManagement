@@ -13,16 +13,6 @@ internal static partial class Commands
     /// </summary>
     internal static Command CameraCommand()
     {
-        Option<bool> subfoldersOption = new(
-            name: "subfolders",
-            description: "Include subfolders",
-            getDefaultValue: () => true);
-
-        Option<bool> openFoldersAfterOption = new(
-            name: "open",
-            description: "Open folders after",
-            getDefaultValue: () => true);
-
         Argument<string> pathArgument = new(
             name: "path",
             description: "Absolute directory path",
@@ -36,6 +26,21 @@ internal static partial class Commands
                 }
                 return path;
             });
+
+        Option<string> destinationOption = new(
+            name: "destination",
+            description: "Override destination directory",
+            getDefaultValue: () => null);
+
+        Option<bool> subfoldersOption = new(
+            name: "subfolders",
+            description: "Include subfolders",
+            getDefaultValue: () => true);
+
+        Option<bool> openFoldersAfterOption = new(
+            name: "open",
+            description: "Open folders after",
+            getDefaultValue: () => true);
 
         // camera list <path>
         Command listCommand = new(
@@ -52,15 +57,16 @@ internal static partial class Commands
             name: "run",
             description: "Run file transfer using individual move or copy settings per file")
         {
+            destinationOption,
             subfoldersOption,
             openFoldersAfterOption,
             pathArgument
         };
-        runCommand.SetHandler((path, subfolders, openFoldersAfter) =>
+        runCommand.SetHandler((path, destination, subfolders, openFoldersAfter) =>
         {
-            Run(CopyType.Run, path, subfolders, openFoldersAfter).Wait();
+            Run(CopyType.Run, path, destination, subfolders, openFoldersAfter).Wait();
         },
-        pathArgument, subfoldersOption, openFoldersAfterOption);
+        pathArgument, destinationOption, subfoldersOption, openFoldersAfterOption);
 
         // camera move <path>
         Command moveCommand = new(
@@ -69,13 +75,14 @@ internal static partial class Commands
         {
             subfoldersOption,
             openFoldersAfterOption,
+            destinationOption,
             pathArgument
         };
-        moveCommand.SetHandler((path, subfolders, openFoldersAfter) =>
+        moveCommand.SetHandler((path, destination, subfolders, openFoldersAfter) =>
         {
-            Run(CopyType.Move, path, subfolders, openFoldersAfter).Wait();
+            Run(CopyType.Move, path, destination, subfolders, openFoldersAfter).Wait();
         },
-        pathArgument, subfoldersOption, openFoldersAfterOption);
+        pathArgument, destinationOption, subfoldersOption, openFoldersAfterOption);
 
         // camera copy <path>
         Command copyCommand = new(
@@ -84,13 +91,14 @@ internal static partial class Commands
         {
             subfoldersOption,
             openFoldersAfterOption,
+            destinationOption,
             pathArgument
         };
-        copyCommand.SetHandler((path, subfolders, openFoldersAfter) =>
+        copyCommand.SetHandler((path, destination, subfolders, openFoldersAfter) =>
         {
-            Run(CopyType.Copy, path, subfolders, openFoldersAfter).Wait();
+            Run(CopyType.Copy, path, destination, subfolders, openFoldersAfter).Wait();
         },
-        pathArgument, subfoldersOption, openFoldersAfterOption);
+        pathArgument, destinationOption, subfoldersOption, openFoldersAfterOption);
 
         // camera rename <path>
         Command renameCommand = new(
@@ -99,13 +107,14 @@ internal static partial class Commands
         {
             subfoldersOption,
             openFoldersAfterOption,
+            destinationOption,
             pathArgument
         };
-        copyCommand.SetHandler((path, subfolders, openFoldersAfter) =>
+        copyCommand.SetHandler((path, destination, subfolders, openFoldersAfter) =>
         {
-            Run(CopyType.Rename, path, subfolders, openFoldersAfter).Wait();
+            Run(CopyType.Rename, path, destination, subfolders, openFoldersAfter).Wait();
         },
-        pathArgument, subfoldersOption, openFoldersAfterOption);
+        pathArgument, destinationOption, subfoldersOption, openFoldersAfterOption);
 
         // camera demo <path>
         Command demoCommand = new(
@@ -114,13 +123,14 @@ internal static partial class Commands
         {
             subfoldersOption,
             openFoldersAfterOption,
+            destinationOption,
             pathArgument
         };
-        demoCommand.SetHandler((path, subfolders, openFoldersAfter) =>
+        demoCommand.SetHandler((path, destination, subfolders, openFoldersAfter) =>
         {
-            Run(CopyType.Demonstration, path, subfolders, openFoldersAfter).Wait();
+            Run(CopyType.Demonstration, path, destination, subfolders, openFoldersAfter).Wait();
         },
-        pathArgument, subfoldersOption, openFoldersAfterOption);
+        pathArgument, destinationOption, subfoldersOption, openFoldersAfterOption);
 
         // camera
         Command cameraCommand = new(
@@ -189,9 +199,10 @@ internal static partial class Commands
     /// </summary>
     /// <param name="copyType">The copy type, whether it be based on each file's camera setting or override to move or copy all</param>
     /// <param name="sourceDirectory">The source directory</param>
+    /// <param name="destinationDirectory">The destination directory if overriding default behavior is desired. Null to load destination from settings.</param>
     /// <param name="subfolders">Include subfolders</param>
     /// <param name="openFoldersAfter">Open the output folders automatically, or not</param>
-    private async static Task Run(CopyType copyType, string sourceDirectory, bool subfolders, bool openFoldersAfter)
+    private async static Task Run(CopyType copyType, string sourceDirectory, string destinationDirectory, bool subfolders, bool openFoldersAfter)
     {
         CameraLoad cameraLoad = new();
         CameraCopy cameraCopy = new();
@@ -225,6 +236,17 @@ internal static partial class Commands
         */
 
         List<CameraFileInfo> files = cameraLoad.GetCameraFilesFromDirectory(sourceDirectory, subfolders, CancellationToken.None, out _);        
+
+        // Override destination directory if one was explicitly specified
+        if (!string.IsNullOrWhiteSpace(destinationDirectory))
+        {
+            foreach (var file in files)
+            {
+                file.DestinationDirectory = destinationDirectory;
+                file.CalculateSelectedState();
+            }
+        }
+
         await cameraCopy.Run(files, copyType, openFoldersAfter, CancellationToken.None);
 
         //cameraLoad.ProgressUpdate -= UpdateProgress();

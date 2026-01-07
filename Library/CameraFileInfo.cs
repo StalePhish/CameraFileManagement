@@ -34,7 +34,7 @@ public class CameraFileInfo : NotifyPropertyChanged
     /// Calculate the destination and selection options given the selected Camera alias
     /// </summary>
     /// <param name="sourceFileInfo">Source file. Null will do a lookup</param>
-    private void CalculateDestination(FileInfo sourceFileInfo)
+    public void CalculateDestination(FileInfo sourceFileInfo)
     {
         // Combine camera destination with formatted file name
         string destination = Path.Combine(Camera?.Destination ?? string.Empty, _fileAttributes.GetDestinationFileName(Camera));
@@ -45,12 +45,20 @@ public class CameraFileInfo : NotifyPropertyChanged
         DestinationFileName = Path.GetFileName(destination);
 
         // Calculate default selected state
+        CalculateSelectedState(sourceFileInfo);
+        Move = Camera?.Move ?? false;
+    }
+
+    /// <summary>
+    /// Calculate default selected state
+    /// </summary>
+    public void CalculateSelectedState(FileInfo sourceFileInfo = null)
+    {
         sourceFileInfo ??= new FileInfo(Source);
         Selected = DestinationDirectory is not null
             && DestinationFileName is not null
             && !DestinationExists
             && (sourceFileInfo.IsReadOnly || (Camera?.Type != CameraType.Dashcam));
-        Move = Camera?.Move ?? false;
     }
 
     /// <summary>
