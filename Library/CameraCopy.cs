@@ -157,7 +157,7 @@ public class CameraCopy : NotifyPropertyChanged
                             file.RaisePropertyChanged(nameof(CameraFileInfo.DestinationExists));
 
                             // Try to modify the file attributes to write the camera make and model into CFM auxiliary data
-                            if (string.IsNullOrWhiteSpace(make) && string.IsNullOrWhiteSpace(model))
+                            if (string.IsNullOrWhiteSpace(make) && string.IsNullOrWhiteSpace(model) && (!string.IsNullOrWhiteSpace(file.Camera.Make) || !string.IsNullOrWhiteSpace(file.Camera.Model)))
                             {
                                 try
                                 {
