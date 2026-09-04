@@ -160,10 +160,18 @@ public static class FileAttributeExtensions
                 // Success
             }
 
+            // Try to get date/time from chat export style filenames: photo_12@04-09-2026_07-46-02.jpg
+            else if (Regex.Match(fileName, @"(?<dt>\d{2}-\d{2}-\d{4}_\d{2}-\d{2}-\d{2})") is Match chatExportMatch && chatExportMatch.Success &&
+                     DateTime.TryParseExact(chatExportMatch.Groups["dt"].Value, 
+                     "dd-MM-yyyy_HH-mm-ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out dateTime))
+            {
+                // Success
+            }
+
             // Date/Time priority order to use for determining the relevant timestamp. Begin with the camera setting 
             // but if none were specified, fall back on the overall setting. Parse as a space-separated ordered list.
             else
-            {   
+            {
                 List<string> dateTimePriorities = [];
 
                 // Use camera-specific DateTimePriority

@@ -6,7 +6,7 @@
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
-        <Version>2026.5.30.1156</Version>
+        <Version>2026.9.4.1541</Version>
         <ApplicationIcon>camera.ico</ApplicationIcon>
 	</PropertyGroup>
 
